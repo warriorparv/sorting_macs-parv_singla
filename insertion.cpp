@@ -1,17 +1,21 @@
 #include <bits/stdc++.h>
 using namespace std;
-int insertionSort(vector<int>& arr) {
-    int n = arr.size();
-    int iterations = 0;
-    for(int i = 1; i < n; i++) {
-        int key = arr[i];
-        int j = i - 1;
-        while(j >= 0 && arr[j] > key) {
-            arr[j+1] = arr[j];
+
+int insertion_sort(vector<int> &v) {
+    int n = v.size();
+    int count = 0;
+
+    for(int i = 0; i < n; i++) {
+        int temp = v[i];
+        int j = i;
+
+        while(j > 0 && v[j - 1] > temp) {
+            v[j] = v[j - 1];
             j--;
-            iterations++;
+            count++;
         }
-        arr[j+1] = key;
+        v[j] = temp;
     }
-    return iterations;
+
+    return count;
 }
