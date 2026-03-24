@@ -1,28 +1,41 @@
 #include <bits/stdc++.h>
 using namespace std;
-int iterations_q = 0;
-int partition(vector<int>& arr, int low, int high) {
-    int pivot = arr[high];
-    int i = low - 1;
-    for(int j = low; j < high; j++) {
-        iterations_q++;
-        if(arr[j] < pivot) {
-            i++;
-            swap(arr[i], arr[j]);
+
+int cnt = 0;
+
+void combine(vector<int> &a, int start, int mid, int end) {
+    int i = start, j = mid + 1;
+    vector<int> temp;
+
+    while(i <= mid && j <= end) {
+        cnt++;
+        if(a[i] <= a[j]) {
+            temp.push_back(a[i++]);
+        } else {
+            temp.push_back(a[j++]);
         }
     }
-    swap(arr[i+1], arr[high]);
-    return i+1;
-}
-void quickSort1(vector<int>& arr, int low, int high) {
-    if(low < high) {
-        int pi = partition(arr, low, high);
-        quickSort1(arr, low, pi - 1);
-        quickSort1(arr, pi + 1, high);
+
+    while(i <= mid) temp.push_back(a[i++]);
+    while(j <= end) temp.push_back(a[j++]);
+
+    for(int k = start; k <= end; k++) {
+        a[k] = temp[k - start];
     }
 }
-int quickSort(vector<int>& arr) {
-    iterations_q = 0;
-    quickSort1(arr, 0, arr.size() - 1);
-    return iterations_q;
+
+void split(vector<int> &a, int start, int end) {
+    if(start == end) return;
+
+    int mid = (start + end) >> 1;
+
+    split(a, start, mid);
+    split(a, mid + 1, end);
+    combine(a, start, mid, end);
+}
+
+int mergeSort(vector<int> &a) {
+    cnt = 0;
+    split(a, 0, (int)a.size() - 1);
+    return cnt;
 }
