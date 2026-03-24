@@ -1,33 +1,50 @@
 #include <bits/stdc++.h>
 using namespace std;
-int iterations_m = 0;
-void merge(vector<int>& arr, int left, int mid, int right) {
-    vector<int> temp;
-    int i = left, j = mid + 1;
-    while(i <= mid && j <= right) {
-        iterations_m++;
-        if(arr[i] <= arr[j]) {
-            temp.push_back(arr[i++]);
+
+int merge_ops = 0;
+
+void mergeParts(vector<int> &v, int l, int m, int r) {
+    vector<int> res;
+    int p1 = l, p2 = m + 1;
+
+    while(p1 <= m && p2 <= r) {
+        merge_ops++;
+        if(v[p1] < v[p2]) {
+            res.push_back(v[p1]);
+            p1++;
         } else {
-            temp.push_back(arr[j++]);
+            res.push_back(v[p2]);
+            p2++;
         }
     }
-    while(i <= mid) temp.push_back(arr[i++]);
-    while(j <= right) temp.push_back(arr[j++]);
-    for(int k = 0; k < temp.size(); k++) {
-        arr[left + k] = temp[k];
+
+    while(p1 <= m) {
+        res.push_back(v[p1]);
+        p1++;
+    }
+
+    while(p2 <= r) {
+        res.push_back(v[p2]);
+        p2++;
+    }
+
+    for(int i = 0; i < res.size(); i++) {
+        v[l + i] = res[i];
     }
 }
-void mergesort1(vector<int>& arr, int left, int right) {
-    if(left < right) {
-        int mid = (left + right) / 2;
-        mergesort1(arr, left, mid);
-        mergesort1(arr, mid + 1, right);
-        merge(arr, left, mid, right);
-    }
+
+void divide(vector<int> &v, int l, int r) {
+    if(l >= r) return;
+
+    int mid = l + (r - l) / 2;
+
+    divide(v, l, mid);
+    divide(v, mid + 1, r);
+    mergeParts(v, l, mid, r);
 }
-int mergeSort(vector<int>& arr) {
-    iterations_m = 0;
-    mergesort1(arr, 0, arr.size() - 1);
-    return iterations_m;
+
+int mergeSort(vector<int> &v) {
+    merge_ops = 0;
+    divide(v, 0, v.size() - 1);
+    return merge_ops;
 }
