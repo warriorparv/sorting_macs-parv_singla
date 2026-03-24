@@ -1,17 +1,26 @@
 #include <bits/stdc++.h>
 using namespace std;
-int selectionSort(vector<int>& arr) {
-    int n = arr.size();
-    int iterations = 0;
-    for(int i = 0; i < n-1; i++) {
-        int minIndex = i;
-        for(int j = i+1; j < n; j++) {
-            iterations++;
-            if(arr[j] < arr[minIndex]) {
-                minIndex = j;
+
+int selection_sort(vector<int> &v) {
+    int n = v.size();
+    int count = 0;
+
+    for(int i = 0; i < n; i++) {
+        int pos = i;
+
+        for(int j = i + 1; j < n; j++) {
+            count++;
+            if(v[j] < v[pos]) {
+                pos = j;
             }
         }
-        swap(arr[i], arr[minIndex]);
+
+        if(pos != i) {
+            int temp = v[i];
+            v[i] = v[pos];
+            v[pos] = temp;
+        }
     }
-    return iterations;
+
+    return count;
 }
